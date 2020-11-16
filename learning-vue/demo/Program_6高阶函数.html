@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Title</title>
+</head>
+
+<body>
+  <h3>Vue语法学习：JavaScript高阶函数</h3>
+
+  <div id="app">
+    <div>{{totalPrice}}</div>
+    <button @click="highLevelFunc()">高阶函数应用</button>
+  </div>
+
+  <script src="../js/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        books: [
+          { id: 50301, name: 'unix编程指南', price: 100, count: 1 },
+          { id: 50302, name: 'java编程思想', price: 200, count: 2 },
+          { id: 50303, name: '小学语文一年级', price: 300, count: 3 },
+        ]
+      },
+      methods: {
+        highLevelFunc() {
+          // js高阶函数有：filter、map、reduce
+          // filter函数的应用
+          let arr = this.books.filter(function (n) {
+            n.pricce > 200;
+          });
+          console.log(arr);
+        },
+      },
+      computed: {
+        totalPrice() {
+          let total = 0;
+          // for( let i=0; i<this.books.length; i++ ){
+          //   total += this.books[i].price * this.books[i].count;
+          // }
+          // ES6的语法，可简化代码
+          for (let book of this.books) {
+            total += book.price * book.count;
+          }
+          return total;
+        },
+
+      },
+      methods: {
+
+      }
+    });
+  </script>
+
+</body>
