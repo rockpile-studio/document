@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Title</title>
+</head>
+
+<body>
+  <h3>Vue语法学习：ES6语法</h3>
+
+  <button>按钮-0</button>
+  <button>按钮-1</button>
+  <button>按钮-2</button>
+  <button>按钮-3</button>
+  <button>按钮-4</button>
+
+  <div id="app">
+    <div>{{totalPrice}}</div>
+  </div>
+
+  <script src="../js/vue.js"></script>
+  <script>
+    // JS中使用var来声明变量时，变量作用域主要是和函数的定义有关
+    // 针对其他定义来说是没有作用域的，比如if/for，导致了一些问题
+    // ES5之前if和for都没有块级作用域的概念，必须借助function作用域来解决外变量的问题
+    // 于是ES6中添加一个新的关键字"let"，支持if和for的块级作用域
+
+    // var没有块作用域引起的问题：for的块级    
+    const btns = document.getElementsByTagName('button');
+    // for (let i = 0; i < btns.length; i++) {
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener('click', function () {
+        // 在下面的示例中，始终打印的是 "按钮-5被点击"
+        console.log('按钮-' + i + '被点击');
+      });
+      // 为什么闭包能解决这个问题？函数是一个独立作用域
+      // (func(num) { ... })(i)的格式，相当于是执行(xxx)(i)这个函数
+      // (function (num) {
+      //   btns[i].addEventListener('click', function () {
+      //     console.log('按钮-' + num + '被点击');
+      //   })
+      // })(i)
+    };
+
+    // ### ES6对象字面量增强写法 ###
+    const name = 'rockpile';
+    const age = 18;
+    const height = 180;
+    // ES5属性写法
+    // const user = {
+    //   name: name,
+    //   age: age,
+    //   height: height,
+    //   running: function () {
+    //     console.log('=== 奔跑中 ===');
+    //   },
+    // };
+    // ES6属性增强写法
+    const user = {
+      name,
+      age,
+      height,
+      running() {
+        console.log('=== 奔跑中 ===');
+      },
+    };
+    console.log(user);
+
+    // 在JavaScript中使用const修饰的标识符为常量，不可以再次赋值
+    // 使用const来保证数据的安全性，一般在开发中优先使用const
+    // 需要改变某一个标识符时才使用let
+    // 这里const是对象的指向不能修改，但是可以改变对象内部的属性
+    const app = new Vue({
+      el: '#app',
+      data: {
+        firstName: 'rockpile',
+        lastName: 'lin',
+        books: [
+          { id: 50301, name: 'unix编程指南', price: 100 },
+          { id: 50302, name: 'java编程思想', price: 200 },
+          { id: 50303, name: '小学语文一年级', price: 300 },
+        ]
+      },
+      computed: {
+        totalPrice: function () {
+          let total = 0;
+          alert('=== 开始计算累计结果 ===');
+          // for( let i=0; i<this.books.length; i++ ){
+          // total += this.books[i].price;}
+          // ES6的语法，可简化代码
+          for (let book of this.books) {
+            total += book.price;
+          }
+          return total;
+        }
+      },
+      methods: {
+
+      }
+    });
+  </script>
+
+</body>

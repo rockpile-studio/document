@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Title</title>
+  <style>
+    [v-cloak] {
+      display: none;
+      /*设置v-cloak属性时，样式display:none*/
+    }
+
+    .active {
+      color: red;
+    }
+
+    .underline {
+      text-decoration: underline;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 在Vue解析app前，div有v-cloak属性 -->
+  <!-- 在Vue解析app后，div有v-cloak属性会自动去除 -->
+  <div id="app" v-cloak>
+    <h3>Vue语法学习：赋值操作</h3>
+    <!-- Mustache语法（双大括号），将文本数据插入html中 -->
+    <!-- 在Mustache语法中不仅可直接写变量，也可以是简单的表达式 -->
+    <div>{{message}} world,{{name}}</div>
+    <div>{{message + ' ' + name}},{{counter*2}}</div>
+    <!-- 在某种情况下，不希望界面内容跟随改变，可以使用v-once指令 -->
+    <div v-once>{{message}} {{name}}</div>
+    <!-- 如果服务器请求到的数据本身就是html代码，不能{{}}直接输出的，使用v-html -->
+    <div v-html="html"></div>
+
+    <h3>Vue语法学习：v-bind 动态绑定属性</h3>
+    <!-- v-bind 属性绑定：比如动态绑定img元素的src属性 -->
+    <!-- v-bind 语法糖“:” -->
+    <img src="./vue-logo.png" alt="LOGO图标-1" v-bind:width="width" height="80px">
+    <img v-bind:src="imgUrl" alt="LOGO图标-2" width="80px" height="80px">
+    <img :src="imgUrl" alt="LOGO图标-3" :width="width" height="80px">
+    <a :href="url">百度一下</a>
+    <br><br>
+
+    <h3>Vue语法学习：v-bind 动态绑定class（对象语法）</h3>
+    <!-- 动态绑定class（对象语法），属性内容中通过{}引用object对象 -->
+    <!-- 当boolean=true时，类名就会被绑定到对象，否则不绑定 -->
+    <!-- <div :class="{类名1:boolean,类名2:boolean}">你好</div> -->
+    <!-- 实际页面渲染后，样式class="bold active"，bold是固定绑定的 active是动态绑定的 -->
+    <span class="bold" :class="{active: isActive, underline: isUnderLine}">你好，rockpile</span>
+    <button @click="btnClick()">切换文字颜色</button><br>
+    <!-- 对于复杂的样式class，可以放在methos方法中 -->
+    <span class="bold" :class="getClasses()">你好，rockpile</span>
+    <!-- 点击列表中的哪一项，则该项文字变为红色 -->
+    <ul>
+      <li :class="getLiClasses(index)" @click="changeColor(index)" v-for="(hobby, index) in hobbies">
+        {{index}}. {{hobby}}</li>
+      <!-- <li v-for="(hobby, index) in hobbies" 
+          @click="changeColor(index)"
+          :class="{active : currIndex==index}">{{index}}. {{hobby}}</li> -->
+    </ul>
+    <br>
+
+    <h3>Vue语法学习：v-bind 动态绑定样式style（对象语法）</h3>
+    <!-- <div :style="{css属性1:'value', css属性2:'value'}">你好</div> -->
+    <!-- 注意这里CSS属性名，需要使用驼峰命名发 -->
+    <!-- <div :style="{fontSize: '20px', color: 'red'}">你好，rockpile</div> -->
+    <div :style="{fontSize: customStyle.fontSize, backgroundColor: 'gray', width: '200px'}">你好，rockpile</div>
+    <div :style="getStyles()">你好，rockpile</div>
+  </div>
+
+  <script src="../js/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        message: 'hello',
+        name: 'rockpile',
+        counter: 15,
+        html: '<a href="http://www.baidu.com">百度</a>',
+        url: "http://www.baidu.com",
+        imgUrl: "./vue-logo.png",
+        width: "60px",
+        isActive: true,
+        isUnderLine: false,
+        hobbies: ['programmer', 'gunpla', 'running'],
+        currIndex: null,
+        isActiveLi: false,
+        customStyle: {
+          fontSize: '20px',
+        },
+      },
+      methods: {
+        btnClick: function () {
+          this.isActive = !this.isActive;
+        },
+        getClasses: function () {
+          return { active: this.isActive, underline: this.isUnderLine }
+        },
+        changeColor: function (index) {
+          this.currIndex = index;
+        },
+        getLiClasses: function (index) {
+          if (this.currIndex == index) {
+            return { active: this.isActive }
+          }
+        },
+        getStyles: function () {
+          return { fontSize: this.customStyle.fontSize, backgroundColor: 'lightgray', width: '200px' }
+        },
+      },
+    });
+  </script>
+
+</body>

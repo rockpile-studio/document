@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Title</title>
+</head>
+
+<body>
+  <h3>Vue语法学习：事件监听</h3>
+  <!-- 在前端开发中，经常需要监听用户发生的事件，如点击、拖拽、键盘事件等 -->
+  <!-- 在Vue中使用v-on指令来监听事件，语法糖缩写"@" -->
+  <!-- 事件包括：点击click、键盘敲击keyup -->
+  <div id="app">
+    <h3>当前计数：{{counter}}</h3>
+    <button v-on:click="increment()">+</button>
+    <!-- 如果监听事件的方法不需要额外参数，则function后()可以不添加 -->
+    <button @click="decrement">-</button>
+    <button @click="incrementTen(10)">+10</button>
+    <!-- 事件定义时，省略了()部分，但方法decrementNum(arg)需要一个参数 -->
+    <!-- 这时，Vue会默认将浏览器生成的event事件对象作为参数传入方法 -->
+    <button @click="decrementTen">-10</button>
+    <!-- 方法定义时，需要event对象，同时又需要其他参数，通过$event传入事件 -->
+    <button @click="incrementHundred(hundred, $event)">+100</button>
+    <br>
+
+    <!-- ### v-on的修饰符 ### -->
+    <!-- 在某些情况下，拿到event的目的是进行一些事件处理 -->
+    <!-- Vue提供了修饰符来方便处理一些监听事件 -->
+    <!-- .stop：调用event.stopPropagation() 禁止事件冒泡 -->
+    <!-- .prevent：调用event.preventDeefault() 禁止默认事件 -->
+    <!-- .{keyCode|keyAlias}：当事件从特定键触发时才回调 -->
+    <!-- .native：监听组件根元素的原生事件 -->
+    <!-- .once：只触发一次回调 -->
+    <h3>Vue语法学习：v-on的修饰符</h3>
+    <div @click="divClick">
+      <div>v-on的修饰符</div>
+      <!-- 这里点击按钮的时候，@btnClick和@divClick都会执行（事件冒泡） -->
+      <button @click="btnClick">按钮-1</button>
+      <!-- 修饰符：".stop"调用event.stopPropagation()，禁止事件冒泡 -->
+      <button @click.stop="btnClick">按钮-2</button>
+      <br>
+      <!-- 当keyup敲击键盘事件，指定enter键触发 -->
+      <input type="text" @keyup.enter="endInput"></input>
+    </div>
+  </div>
+
+  <script src="../js/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        counter: 0,
+        hundred: 100,
+      },
+      methods: {
+        increment() {
+          console.log('执行计数器累加');
+          this.counter++;
+        },
+        decrement() {
+          console.log('执行计数器减少');
+          this.counter--;
+        },
+        incrementTen(num) {
+          this.counter = this.counter + num;
+        },
+        decrementTen(event) {
+          console.log('event事件：', event);
+          this.counter = this.counter - 10;
+        },
+        incrementHundred(num, event) {
+          console.log('event事件：', event);
+          this.counter = this.counter + num;
+        },
+        divClick() {
+          console.log('====== div click ======');
+        },
+        btnClick() {
+          console.log('====== button click ======');
+        },
+        endInput() {
+          console.log('====== end input ======');
+        },
+      }
+    });
+  </script>
+
+</body>

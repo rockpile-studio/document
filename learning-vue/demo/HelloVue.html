@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    </meta>
+    <title>Title</title>
+</head>
+
+<body>
+    <!-- <div id="demo">{{message}}</div> -->
+    <div id="demo">
+        <h1>{{message}} </h1>
+        <h2>{{name}}</h2>
+        <h2>当前计数：{{counter}}</h2>
+        <!-- 声明监听click事件，v-on:click -->
+        <!-- 声明监听click事件，@click 语法糖简写 -->
+        <button v-on:click="counter=counter+10">+10</button>
+        <!-- 声明监听click事件，执行函数 -->
+        <button @click="add()">+</button>
+        <button @click="sub()">-</button>
+        <!-- 无序列表 -->
+        <ul>
+            <li v-for="hobby in hobbies">{{hobby}}</li>
+        </ul>
+    </div>
+
+    <script src="../js/vue.js"></script>
+    <script>
+        // 声明式编程范式，实现数据和界面分离
+        // ES6中使用 let（变量）/const（常量）来定义
+        // 创建一个Vue对象
+        const app = new Vue({
+            // el属性，决定这个Vue对象挂载到哪个元素
+            // 这里挂载了id为demo的元素
+            el: '#demo',
+            // data属性用户存储数据
+            // 可以是直接定义的数据，也可以是网络服务器的
+            data: {
+                // 浏览器中选择开发人员工具，
+                // 在Console中输入命令 app.message='Hi' 可变更数据
+                message: 'hello',
+                name: 'rockpile',
+                // 在Console中输入命令 app.hobbies.push('reading') 可变更数据
+                hobbies: ['programmer', 'gunpla', 'running'],
+                counter: 0
+            },
+            // methods属性，用于在Vue对象中定义方法
+            // 可以在其他地方调用，也可以在指令中使用
+            methods: {
+                add: function () {
+                    console.log('执行计数器累加');
+                    // 取当前对象的变量 this.counter
+                    this.counter++;
+                },
+                sub: function () {
+                    console.log('执行计数器减少');
+                    this.counter--;
+                },
+            },
+            // Vue生命周期函数 beforeCreate -> created -> mounted
+            created: function () {
+                // created阶段可以访问data数据，之后在内存中创建模板
+                console.log('=== created ===');
+            },
+            mounted: function () {
+                console.log('=== mounted ===');
+            },
+        });
+
+    </script>
+
+</body>
+
+</html>

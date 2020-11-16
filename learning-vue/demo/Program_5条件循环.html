@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Title</title>
+</head>
+
+<body>
+  <div id="app">
+    <h3>Vue语法学习：条件判断</h3>
+    <!-- 常用指令 v-if、v-else-if、v-else -->
+    <!-- v-if是当后面的条件是false时，对应的元素及其子元素不渲染 -->
+    <!-- 开发工具：app.isHidden=false，内容动态隐藏 -->
+    <div v-if="isHidden">
+      <div style="color: red; font-weight: bold;">{{hello}}</div>
+      <div style="color: blue; font-weight: bold;">{{person}}</div>
+    </div>
+    <!-- v-show的用法和v-if相似，也是用于决定元素是否渲染，区别是： -->
+    <!-- v-if：当条件false时，压根不会有对应元素在dom中 -->
+    <!-- v-show：当条件false时，仅仅是将元素的display属性设置为none -->
+    <!-- 当需要在显示和隐藏之间频繁切换时，使用v-show -->
+    <div v-show="!isHidden">{{hello}} {{person}}</div>
+
+    <div>
+      <p v-if="score>=90">优秀</p>
+      <p v-else-if="score>=80">良好</p>
+      <p v-else-if="score>=60">及格</p>
+      <p v-else="score>=60">不及格</p>
+      <p>{{scoreRange}}</p>
+    </div>
+
+    <h3>Vue语法学习：登陆切换</h3>
+    <div v-if="isHidden">
+      <!-- label标签作用：点击的时候，自动对焦到制定id -->
+      <label for="name">用户账号：</label>
+      <!-- Vue在进行dom渲染时，出于性能考虑，会尽可能复用已存在的元素 -->
+      <!-- 登陆类型切换的时候，v-else中的input会直接沿用v-if中的input -->
+      <!-- 如果不希望Vue复用该dom，可以针对input添加key，保证key的不同 -->
+      <input type="text" id="name" placeholder="用户账号" key="nameIn"></input>
+    </div>
+    <div v-else="isHidden">
+      <label for="mail">邮箱账号：</label>
+      <input type="text" id="mail" placeholder="邮箱账号" key="mailIn"></input>
+    </div>
+    <label for="password">登陆密码：</label>
+    <input type="password" id="password"></input>
+    <button @click="switchLoginType">切换登陆类型</button><br>
+
+    <h3>Vue语法学习：循环遍历数组</h3>
+    <p>官方推荐：在使用v-for时，给对应的元素或组件上添加":key"属性</p>
+    <p>原因：在遍历数组中间插入元素时，key属性更有利于Vue虚拟dom的渲染</p>
+    <ul>
+      <!-- hobbies: ['programmer', 'gunpla', 'running', 'reading'] -->
+      <!-- app.hobbies.push('reading') 添加元素 -->
+      <!-- app.hobbies.splice(2,2) 删除下标2开始的2个元素，即running+reading -->
+      <!-- app.hobbies.splice(2,0,'walking') 在下标2元素后增加新元素 -->
+      <!-- app.hobbies.splice(2,2,'walking','singing') 在下标2元素后替换2个元素 -->
+      <li v-for="item in hobbies" :key="item">{{item}}</li>
+    </ul>
+    <button @click="btnClick">按钮</button>
+    <ul>
+      <!-- 在遍历过程中，获取数组下标索引值 -->
+      <li v-for="(item, index) in hobbies" :key="item">{{index+1}}. {{item}}</li>
+    </ul>
+
+    <h3>Vue语法学习：循环遍历对象</h3>
+    <ul>
+      <!-- 遍历对象的过程中，如果只获取到一个值，那么获取到的是value -->
+      <li v-for="value in info">{{value}}</li>
+    </ul>
+    <ul>
+      <!-- 遍历对象的过程中，获取对象的key和value -->
+      <li v-for="(value, key) in info" :key="key">{{key}} : {{value}}</li>
+    </ul>
+    <ul>
+      <li v-for="(value, key, index) in info" :key="key">{{index+1}}. {{key}} : {{value}}</li>
+    </ul>
+    
+  </div>
+
+  <script src="../js/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        isHidden: true,
+        hello: 'hello',
+        person: 'world',
+        score: 85,
+        hobbies: ['programmer', 'gunpla', 'running'],
+        info: {
+          name: 'rockpile',
+          age: 18,
+          height: 180,
+        },
+        seqNo: 100,
+        books: [
+          { id: 50301, name: 'unix编程指南', price: 100 },
+          { id: 50302, name: 'java编程思想', price: 200 },
+          { id: 50303, name: '小学语文一年级', price: 300 },
+        ],
+        totalPrice: 0,
+      },
+      methods: {
+        switchLoginType() {
+          this.isHidden = !this.isHidden;
+        },
+        btnClick() {
+          // 添加元素（响应式：当数据发生变化，页面视图发生对应的更新）
+          // 如果不增加seqNo，会提示li元素:key属性重复
+          this.hobbies.push('reading' + this.seqNo);
+          this.seqNo++;
+
+          // 删除下标2开始的2个元素， 即running+reading
+          this.hobbies.splice(2, 1);
+
+          // 能触发页面响应式更新的方法有：
+          // push() 在数组最前面添加一个或多个元素; pop() 删除最后一个元素;
+          // shift() 删除第一个元素; unshift() 在数组最前面添加一个或多个元素;
+          // splice(start,...); 在指定位置删除/插入/替换元素
+          // - this.hobbies.splice(2,2); 删除下标2开始的2个元素，即running+reading
+          // - this.hobbies.splice(2,0,'walking'); 在下标2元素后增加新元素
+          // - this.hobbies.splice(2,2,'walking','singing'); 在下标2元素后替换2个元素
+          // sort() 排序; 
+          // reverse() 反转;
+
+          // this.hobbies[0]的赋值，不能触发页面响应式
+          // this.hobbies[0] = 'abc';
+
+          // 使用Vue的set方法设置要修改的值（响应式）
+          // .set(要修改的值, 索引值, 修改后的值)
+          Vue.set(this.hobbies, 0, 'beginning');
+        },
+      },
+      computed: {
+        scoreRange() {
+          let range = '';
+          if (this.score >= 90) {
+            range = '优秀';
+          } else if (this.score >= 80) {
+            range = '良好';
+          } else if (this.score >= 60) {
+            range = '及格';
+          } else {
+            range = '不及格';
+          }
+          return range;
+        }
+      }
+    });
+  </script>
+
+</body>

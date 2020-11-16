@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Title</title>
+</head>
+
+<body>
+  <div id="app">
+    <h3>Vue语法学习：计算属性</h3>
+    <div>{{fullName}}</div>
+    <div>书籍总价：{{totalPrice}}</div>
+  </div>
+
+  <script src="../js/vue.js"></script>
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        firstName: 'rockpile',
+        lastName: 'lin',
+        books: [
+          { id: 50301, name: 'unix编程指南', price: 100 },
+          { id: 50302, name: 'java编程思想', price: 200 },
+          { id: 50303, name: '小学语文一年级', price: 300 },
+        ]
+      },
+      methods: {
+
+      },
+      // 计算属性有缓存机制，多次使用时只会调用一次，效率更高
+      computed: {
+        // fullName: {
+        //   set: function (newValue) {
+        //     console.log("====== fullName Setter ======")
+        //     const names = newValue.split(' ');
+        //     this.firstName = names[0];
+        //     this.lastName = names[1];
+        //   },
+        //   get: function () {
+        //     return this.firstName + ' ' + this.lastName;
+        //   }
+        // },
+        // 计算属性一般是没有setter方法，只读属性，可以简写为以下的格式
+        fullName: function () {
+          return this.firstName + ' ' + this.lastName;
+        },
+        totalPrice: function () {
+          let total = 0;
+          // for( let i=0; i<this.books.length; i++ ){
+          // total += this.books[i].price;}
+          // ES6的语法，可简化代码
+          for (let book of this.books) {
+            total += book.price;
+          }
+          return total;
+        }
+      }
+    });
+  </script>
+
+</body>
