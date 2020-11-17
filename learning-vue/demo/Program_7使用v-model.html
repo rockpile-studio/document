@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Title</title>
+</head>
+
+<body>
+  <div id="app">
+    <h3>Vue语法学习：v-model双向绑定</h3>
+    <!-- v-model实现元素和数据的双向绑定 -->
+    <div>
+      <!-- 通过v-model将input框和message实现双向绑定 -->
+      <!-- input中输入的信息变化，同步message数据内容 -->
+      <input type="text" v-model="message"></input>
+      <span>{{message}}</span>
+      <br>
+      <!-- v-model可以理解为以下代码的等效 -->
+      <!-- <input type="text" :value="message" @input="changeVal($event)"></input> -->
+      <input type="text" :value="message" @input="message = $event.target.value"></input>
+    </div>
+
+    <h3>v-model 单选框radio</h3>
+    <div>
+      <label for="male">
+        <!-- 两个redio均通过v-model绑定sex，可以省略name="sex"的互斥关系 -->
+        <!-- <input type="radio" id="male" name="sex" value="1" v-model="sex">男</input> -->
+        <input type="radio" id="male" value="1" v-model="sex">男</input>
+      </label>
+      <label for="female">
+        <!-- <input type="radio" id="female" name="sex" value="2" v-model="sex">女</input> -->
+        <input type="radio" id="female" value="2" v-model="sex">女</input>
+      </label>
+      <div>选择性别value={{sex}}</div>
+    </div>
+
+    <h3>v-model 单选框checkbox</h3>
+    <label for="agree">
+      <input type="checkbox" id="agree" v-model="isAgree">同意协议</input>
+    </label>
+    <div>是否同意协议={{isAgree}}</div>
+    <button :disabled="!isAgree">下一步</button>
+
+    <h3>v-model 复选框checkbox</h3>
+    <label for="reading">
+      <input type="checkbox" id="reading" value="reading" v-model="hobbies">阅读</input>
+    </label>
+    <label for="running">
+      <input type="checkbox" id="running" value="running" v-model="hobbies">跑步</input>
+    </label>
+    <label for="singing">
+      <input type="checkbox" id="singing" value="singing" v-model="hobbies">唱歌</input>
+    </label>
+    <div>兴趣={{hobbies}}</div>
+    <!-- v-model结合v-bind实现值绑定 -->
+    <label v-for="(item, index) in originHobbies" :for="item.value">
+      <input type="checkbox" :id="item.value"
+        :value="item.value" v-model="hobbies">{{item.label}}</input>
+    </label>
+
+    <h3>v-model 下拉框select</h3>
+    <select name="水果1" id="selector1" v-model="fruit">
+      <option value="apple">苹果</option>
+      <option value="banana">香蕉</option>
+      <option value="peach">桃子</option>
+    </select>
+    <div>水果={{fruit}}</div>
+
+    <!-- 按住ctrl可选择多个项 -->
+    <h3>v-model 多选框select</h3>
+    <select name="水果2" id="selector2" v-model="fruits" multiple>
+      <option value="apple">苹果</option>
+      <option value="banana">香蕉</option>
+      <option value="peach">桃子</option>
+    </select>
+    <div>水果={{fruits}}</div> 
+
+    <h3>v-model 修饰符lazy/number/trim</h3>
+    <p>修饰符lazy 示例：{{context1}}</p>
+    <input type="text" id="decorate-lazy1" v-model="context1"></input><br>
+    <!-- 默认情况下，v-model是在input事件中同步输入框的数据 -->
+    <!-- lazy修饰符，保证数据在失去焦点或者输入回车的时候才更新绑定 -->
+    <input type="text" id="decorate-lazy2" v-model.lazy="context1"></input><br>
+    <br>
+    <p>修饰符number 示例：{{context2}}</p>
+    <p>context2 数据类型：{{typeof context2}}</p>
+    <input type="number" id="decorate-number1" v-model.lazy="context2"></input><br>
+    <!-- 默认情况下，输入框无论输入的是字母还是数字，都会当做String类型处理 -->
+    <!-- number修饰符可以让输入框中输入的内容自动转成数字类型 -->
+    <input type="number" id="decorate-number2" v-model.number.lazy="context2"></input><br>
+    <br>
+    <p>修饰符trim 示例：{{context3}}</p>
+    <!-- trim修饰符可以过滤内容左右两边的空格 -->
+    <input type="text" id="decorate-trim1" v-model.lazy="context3"></input><br>
+    <input type="text" id="decorate-trim2" v-model.trim.lazy="context3"></input><br>
+  </div>
+
+  <script src="../js/vue.js"></script> 
+  <script>
+    const app = new Vue({
+      el: '#app',
+      data: {
+        message: 'hi',
+        sex: '1',
+        isAgree: false,
+        hobbies: [],
+        originHobbies: [
+          {label:'阅读', value:'reading'},
+          {label:'跑步', value:'running'},
+          {label:'唱歌', value:'singing'},
+        ],
+        fruit: 'apple',
+        fruits: [],
+        context1: '',
+        context2: '',
+        context3: '',
+      },
+      methods: {
+        changeVal(event) {
+          // 通过event事件中target.value获取修改的input框内容
+          this.message = event.target.value;
+        },
+      },
+    });
+  </script>
+
+</body>

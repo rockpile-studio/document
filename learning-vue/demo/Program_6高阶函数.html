@@ -7,11 +7,12 @@
 </head>
 
 <body>
-  <h3>Vue语法学习：JavaScript高阶函数</h3>
-
   <div id="app">
-    <div>{{totalPrice}}</div>
-    <button @click="highLevelFunc()">高阶函数应用</button>
+    <h3>Vue语法学习：JavaScript高阶函数</h3>
+    <div>
+      <div style="color: red; font-weight: bold;">{{totalPrice}}</div>
+      <button @click="demo">高阶函数应用</button>
+    </div>
   </div>
 
   <script src="../js/vue.js"></script>
@@ -23,16 +24,66 @@
           { id: 50301, name: 'unix编程指南', price: 100, count: 1 },
           { id: 50302, name: 'java编程思想', price: 200, count: 2 },
           { id: 50303, name: '小学语文一年级', price: 300, count: 3 },
-        ]
+        ],
       },
       methods: {
-        highLevelFunc() {
+        demo() {
+          console.log('=== 高阶函数应用 ===');
+          // 对象的拷贝，使用JSON.stringify和JSON.parse实现深拷贝
+          // 不能使用 let copyArr = this.books.concat();
+          let copyObjArr = JSON.parse(JSON.stringify(this.books))
           // js高阶函数有：filter、map、reduce
-          // filter函数的应用
-          let arr = this.books.filter(function (n) {
-            n.pricce > 200;
-          });
-          console.log(arr);
+          // filter函数应用，提取大于200元的书籍清单
+          // let arr1 = [];
+          // for( let i=0; i<this.books.length; i++ ){
+          //   if( this.books[i].price >=200 ){
+          //     arr1.push(this.books[i]);
+          //   }
+          // }
+          // filter中的回调函数，要求返回boolean类型
+          // 返回true，函数内部会将这次回调n加入新的数组
+          // 返回false，函数内部会过滤本次回调的n
+          // let arr1 = this.books.filter(function (n) {
+          //   return n.price >= 200;
+          // });
+          // filter高阶函数可以简写
+          let arr1 = this.books.filter((n) => (n.price >= 200));
+          console.log(arr1);
+
+          // map函数应用：将书籍全部打88折
+          // let arr2 = [];
+          // for (let i in this.books) {
+          //   let book = this.books[i];
+          //   book.price = book.price * 0.88;
+          //   arr2.push(book);
+          // }
+          // map中的回调函数，要求返回对象结构的数据
+          // let arr2 = this.books.map(function (n) {
+          //   n.price = n.price * 0.88;
+          //   return n;
+          // });
+          // map高阶函数可以简写
+          let arr2 = this.books.map((n) => (n.price = n.price * 0.88, n));
+          console.log(arr2);
+
+          // reduce函数应用：计算所有书籍的总价
+          // let total = 0.00;
+          // for (let book of this.books) {
+          //   total += book.price * book.count; 
+          // }
+          // map中的回调函数，要求返回传入一个function对象，一个初始化数值
+          // let total = this.books.reduce(function (total, n) {
+          //   return total + n.price * n.count;
+          // }, 0.00);
+          // reduce高阶函数可以简写
+          let total = this.books.reduce((pre, n) => (pre + n.price * n.count), 0.00);
+          console.log(total);
+
+          // 高阶函数综合应用场景：提取>=200的数据打88折，计算总价
+          let total2 = copyObjArr.filter(n => n.price >= 200)
+            .map(n => (n.price = n.price * 0.88, n))
+            .reduce((pre, n) => pre + n.price * n.count, 0.00);
+          console.log(total2);
         },
       },
       computed: {
@@ -46,11 +97,7 @@
             total += book.price * book.count;
           }
           return total;
-        },
-
-      },
-      methods: {
-
+        }
       }
     });
   </script>
