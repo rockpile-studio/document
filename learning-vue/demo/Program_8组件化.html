@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8"/>
+  <title>Title</title>
+</head>
+
+<body>
+<!-- 组件模板抽离的写法：<script>标签 -->
+<script type="text/x-template" id="parent-cpn">
+  <div>
+    <div style="font-weight: bold;">父组件模板内容</div>
+    <child-cpn></child-cpn>
+  </div>
+</script>
+<!-- 组件模板抽离的写法：<template>标签 -->
+<template id="parent-tpl">
+  <div>
+    <div style="font-weight: bold;">父组件模板内容</div>
+    <child-cpn></child-cpn>
+  </div>
+</template>
+
+<div id="app">
+  <h2>Vue语法学习：组件化开发</h2>
+  <h3>Vue实例 id="app"</h3>
+  <!-- 3、使用组件 my-cpn -->
+  <!-- 组件必须挂载在具体的Vue实例下，否则不会生效 -->
+  <my-cpn></my-cpn>
+  <div>
+    <my-cpn></my-cpn>
+  </div>
+  <p style="font-weight: bold;">### 局部组件 ###</p>
+  <local-cpn></local-cpn>
+
+  <h2>Vue语法学习：父子组件</h2>
+  <parent-cpn></parent-cpn>
+</div>
+<!-- 不包含具体的Vue实例下，不生效 -->
+<my-cpn></my-cpn>
+
+<div id="app2">
+  <h3>Vue实例 id="app2"</h3>
+  <my-cpn></my-cpn>
+  <br>
+  <local-cpn></local-cpn>
+</div>
+
+<script src="../js/vue.js"></script>
+<script>
+  // 1、创建组件构造器
+  // 通常在创建组件构造器时，传入template表示自定义的组件模板
+  // 该模板就是在调用组件时，要显示的html代码
+  // 一般会直接使用语法糖（）的方式实现Vue.extend
+  const myCpnConstructor = Vue.extend({
+    // ES6语法：使用反引号`定义字符串，支持直接换行定义
+    // 优于原先单引号和双引号的写法
+    template: `
+      <div>
+        <span style="color: red;">组件模板标题</span>
+        <div>构造器作为一种方法,负责类中成员变量(域)的初始化。</div>
+      </div>`,
+  });
+  // 父组件
+  // 使用语法糖方式注册组件，Vue2.X版本中一般推荐该写法
+  const parentCpn = Vue.extend({
+    template: '#parent-tpl',
+    components: {
+      childCpn: myCpnConstructor,
+    },
+  });
+
+  // 2、注册组件（全局组件注册）
+  // 全局组件：组件可以在多个Vue的示例下面使用，如app、app2两个Vue实例
+  // 调用Vue.component()将刚才的组件构造器注册为一个组件，并给组件起一个标签名称
+  // Vue.component('组件的标签名', 组件构造器)
+  // Vue.component('my-cpn', myCpnConstructor);
+  // 使用语法糖方式注册组件，Vue2.X版本中一般推荐该写法
+  Vue.component('my-cpn', {
+    template: `
+      <div>
+        <span style="color: blue;">全局组件标题</span>
+        <div>构造器作为一种方法,负责类中成员变量(域)的初始化。</div>
+      </div>`,
+  });
+
+  // Vue对象可以视为root组件
+  const app = new Vue({
+    el: '#app',
+    data: {},
+    methods: {},
+    // 局部组件注册
+    components: {
+      // myLocalCpn表示使用组件时的标签名
+      // vue要求创建组件时使用驼峰命名，由于html对大小写不敏感，调用组件时需要将驼峰改为横线-写法
+      localCpn: myCpnConstructor,
+      parentCpn: parentCpn,
+    }
+  });
+  // 在实际项目中，一般不会有多个Vue实例
+  const app2 = new Vue({
+    el: '#app2',
+  });
+</script>
+
+</body>
