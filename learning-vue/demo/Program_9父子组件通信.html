@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<!-- 子组件时不能引用父组件或者Vue实例的数据，但在开发中，往往数据需要从上层传递到下层 -->
+<!-- 比如页面中，我们从服务器请求到全部的数据 -->
+<!-- 子组件不需要再次发送一个网络请求，而是直接让父组件将数据传递给子组件 -->
+<!-- Vue对父子组件间的通信机制：通过props向子组件传递数据，通过emit事件向父组件发送消息 -->
+<div id="app">
+  <h3>Vue语法学习：父子组件通信</h3>
+  <!-- 通过v-bind绑定props传递的变量，语法糖简写":" -->
+  <!-- 如果不通过v-bind进行属性绑定，则直接传递"hobbies"字符串给child-hobbies -->
+  <!-- v-bind属性绑定的时候，不支持驼峰方式命名，需要改成Pascal方式命名 -->
+  <!-- 通过v-on监听子组件发送的自定义事件'button-click'，v-on语法糖简写@  -->
+  <demo-component :child-info="userInfo" :child-hobbies="hobbies" @button-click="categoryClick"></demo-component>
+</div>
+
+<template id="demoComponent">
+  <!-- 定义子组件模板的时候，在外层包装一层<div> -->
+  <div>
+    <p style="font-weight: bold">{{childMessage}}, {{childInfo.name}}</p>
+    <ul>
+      <li v-for="(hobby, index) in childHobbies">{{index+1}}. {{hobby}}</li>
+    </ul>
+    <div v-for="(item, index) in categories">
+      <button @click="buttonClick(item)">{{item.name}}</button>
+    </div>
+  </div>
+</template>
+
+<script src="../js/vue.js"></script>
+<script>
+  // 语法糖方式定义组件，
+  // const demoComponent = Vue.extend({})
+  const demoComponent = {
+    template: '#demoComponent',
+    // 在组件中，使用选项props来声明需要从父级接收的数据
+    // props两种写法：
+    // 1、字符串数组：数组中的字符串就是传递时的名称
+    // props: ['childHobbies', 'childMessage'],
+    // 2、对象：对象可以设置传递的属性，也可以设置默认值等
+    props: {
+      // 简单方式声明，基本类型检查 childMessage: String
+      // 如果存在多种可能的类型，可以写成：childMessage: [String, Number]
+      // 支持的数据类型：String、Number、Boolean、Array、Object、Date、Function、自定义类型Symbol
+      childMessage: {
+        type: String,
+        default: 'hello world',
+        required: false, // required=true 表示组件调用时必须要传递childMessage变量
+      },
+      childHobbies: {
+        type: Array,
+        // 类型是对象或者数组时，默认值必须是通过函数类型，不能直接用"default: []"
+        default() {
+          return ['singing'];
+        },
+        required: true,
+        //  自定义验证函数：传递数据时校验数量大于3
+        validator: function (value) {
+          return value.length >= 3;
+        },
+      },
+      childInfo: Object,
+    },
+    data() {
+      return {
+        categories: [
+          {id: 50301, name: '热门推荐'},
+          {id: 50302, name: '家用电器'},
+          {id: 50303, name: '数码产品'},
+        ],
+      }
+    },
+    methods: {
+      buttonClick(category) {
+        console.log('子组件发送emits事件消息', category);
+        // 当子组件需要向父组件传递数据时，就要用到自定义事件
+        // 通过emit触发事件，向父组件发送消息，事件名为"button-click"
+        this.$emit('button-click', category);
+      },
+    }
+  }
+
+  const app = new Vue({
+    el: '#app',
+    data: {
+      hobbies: ['programmer', 'running', 'reading'],
+      userInfo: {
+        name: 'rockpile',
+        age: 18,
+        height: 180,
+      }
+    },
+    methods: {
+      categoryClick(category) {
+        console.log('父组件接收到子组件消息', category);
+      }
+    },
+    components: {
+      // 以下语句是增强写法：'demo-component': demoComponent 或 demoComponent: demoComponent
+      demoComponent,
+    }
+  });
+</script>
+</body>
+</html>
