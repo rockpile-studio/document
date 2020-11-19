@@ -23,3 +23,5 @@ import {name, age, height} from './js/userInfo'
 console.log('name', name);
 console.log('age', age);
 console.log('height', height);
+
+require('./css/normal.css');
