@@ -1,3 +1,4 @@
 /.idea/
 /.gitignore
 /demo-webpack/dist/bundle.js
+/demo-webpack/node_modules/
