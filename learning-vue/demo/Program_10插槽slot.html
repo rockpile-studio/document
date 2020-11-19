@@ -7,19 +7,94 @@
 <body>
 <div id="app">
   <h3>Vue语法学习：插槽slot使用</h3>
+  <!-- 渲染slot内部默认的元素 -->
+  <demo-component></demo-component>
+  <br>
+  <!-- 通过增加子组件的内容，button自动会添加到子组件的slot插槽中 -->
+  <!-- button 值替换未指定名字的插槽 -->
+  <demo-component>
+    <button>演示按钮</button>
+  </demo-component>
+  <br>
+  <!-- 如果有多个元素时，会一起替换组件内插槽 -->
+  <demo-component>
+    <span style="color: green;">演示标签</span>
+    <button style="color: green;">演示按钮</button>
+  </demo-component>
+  <br>
+  <!-- 具名插槽的使用 -->
+  <demo-component>
+    <span style="color: green;">演示标签</span>
+    <button slot="right" style="color: green;">演示按钮(具名)</button>
+  </demo-component>
+
+  <my-component></my-component>
+  <!-- 作用域插槽：父组件替换插槽的标签，但是内容是由子组件来提供 -->
+  <my-component>
+    <!-- 通过子组件中绑定的extra-data属性，获取子组件中的programLanguages -->
+    <template slot="languages" slot-scope="slot">
+      <span v-for="(language, index) in slot.extraData">{{index==0? '':', '}}{{language}}</span>
+      <br>
+      <span>{{slot.extraData.join(' - ')}}</span>
+    </template>
+  </my-component>
 </div>
+
+<template id="demoComponent">
+  <div>
+    <div>子组件：demoComponent</div>
+    <!-- 组件插槽是为了让封装的组件更具扩展性，提高多页面的复用度 -->
+    <!-- 将共性的抽取到组件中，将不同的暴露为插槽 -->
+    <!-- slot内部可以指定默认的元素 -->
+    <slot>
+      <span style="color: blue;">插槽左侧-默认元素</span>
+    </slot>
+    <!-- 具名插槽的使用 -->
+    <slot name="right">
+      <span style="color: red;">插槽右侧-默认元素</span>
+    </slot>
+  </div>
+</template>
+
+<template id="myComponent">
+  <div>
+    <!-- 作用域插槽 -->
+    <slot name="languages" :extra-data="programLanguages">
+      <ul>
+        <li v-for="(language, index) in programLanguages">{{language}}</li>
+      </ul>
+    </slot>
+  </div>
+</template>
 
 <script src="../js/vue.js"></script>
 <script>
+  const demoComponent = {
+    template: '#demoComponent',
+    data() {
+      return {}
+    },
+    methods: {}
+  }
+
+  const myComponent = {
+    template: '#myComponent',
+    data() {
+      return {
+        programLanguages: ['C', 'C++', 'Java', 'JavaScript', 'Python', 'Go'],
+      }
+    },
+  }
 
   const app = new Vue({
     el: '#app',
     data: {
       message: 'Hi',
     },
-    methods: {
-    },
+    methods: {},
     components: {
+      demoComponent,
+      myComponent,
     }
   });
 </script>
