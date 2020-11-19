@@ -12,23 +12,34 @@
 <!-- Vue对父子组件间的通信机制：通过props向子组件传递数据，通过emit事件向父组件发送消息 -->
 <div id="app">
   <h3>Vue语法学习：父子组件通信</h3>
+  <p>{{message}}</p>
   <!-- 通过v-bind绑定props传递的变量，语法糖简写":" -->
   <!-- 如果不通过v-bind进行属性绑定，则直接传递"hobbies"字符串给child-hobbies -->
   <!-- v-bind属性绑定的时候，不支持驼峰方式命名，需要改成Pascal方式命名 -->
   <!-- 通过v-on监听子组件发送的自定义事件'button-click'，v-on语法糖简写@  -->
-  <demo-component :child-info="userInfo" :child-hobbies="hobbies" @button-click="categoryClick"></demo-component>
+  <!-- 增加ref属性，父组件就可以通过$refs访问子组件，默认ref属性为空 -->
+  <demo-component :child-info="userInfo" :child-hobbies="hobbies" ref="demoCpn"
+                  @button-click="categoryClick" @text-change="messageChange"></demo-component>
+  <br>
+  <button @click="getChildInfo" style="color: blue;">访问子组件属性</button>
 </div>
 
 <template id="demoComponent">
   <!-- 定义子组件模板的时候，在外层包装一层<div> -->
   <div>
     <p style="font-weight: bold">{{childMessage}}, {{childInfo.name}}</p>
+    <input type="text" v-model.lazy="localMessage">
+    <br>
+    <!-- change事件：仅在输入框失去焦点或用户按下回车时触发 -->
+    父子组件属性双向绑定：<input type="text" v-model.lazy="localMessage" @change="textInput">
+
     <ul>
       <li v-for="(hobby, index) in childHobbies">{{index+1}}. {{hobby}}</li>
     </ul>
     <div v-for="(item, index) in categories">
       <button @click="buttonClick(item)">{{item.name}}</button>
     </div>
+    <button @click="getParentInfo" style="color: red;">访问父组件属性</button>
   </div>
 </template>
 
@@ -68,6 +79,10 @@
     },
     data() {
       return {
+        // 如果子组件中需要对childMessage的数据进行双向绑定时，在data中定义一个新属性
+        // props传递的变量一般做只读数据用，不简易修改
+        localMessage: this.childMessage,
+        localHobbies: this.childHobbies,
         categories: [
           {id: 50301, name: '热门推荐'},
           {id: 50302, name: '家用电器'},
@@ -82,12 +97,28 @@
         // 通过emit触发事件，向父组件发送消息，事件名为"button-click"
         this.$emit('button-click', category);
       },
+      textInput(event) {
+        console.log('子组件input发送emits事件消息');
+        this.$emit('text-change', event.target.value)
+      },
+      showHobbies() {
+        console.log('子组件内打印localHobbies属性', this.localHobbies);
+      },
+      getParentInfo() {
+        // 子组件访问父组件：使用$parent（由于耦合性的问题，一般不适用$parent）
+        console.log('子组件访问父组件：', this.$parent);
+        console.log('$parent.userInfo', this.$parent.userInfo);
+        // 子组件访问根组件：使用$root
+        console.log('子组件访问根组件：', this.$root);
+        console.log('$root.hobbies：', this.$root.hobbies);
+      },
     }
   }
 
   const app = new Vue({
     el: '#app',
     data: {
+      message: 'Hi',
       hobbies: ['programmer', 'running', 'reading'],
       userInfo: {
         name: 'rockpile',
@@ -98,7 +129,26 @@
     methods: {
       categoryClick(category) {
         console.log('父组件接收到子组件消息', category);
-      }
+      },
+      messageChange(message) {
+        this.message = message;
+      },
+      getChildInfo() {
+        //  父组件访问子组件：使用$children 或 $refs
+        console.log('父组件访问子组件($children)：', this.$children);
+        // this.$children是一个数组类型，包含所有子对象，可以遍历取得所有子组件的对象属性
+        // 由于$children通过数组下标访问数据（下标位置不确定），开发中一般不使用$children访问子组件
+        for (let childComponent of this.$children) {
+          console.log('props属性 childMessage：', childComponent.childMessage);
+          console.log('data属性 localMessage：', childComponent.localMessage);
+          childComponent.showHobbies();
+        }
+
+        console.log('父组件访问子组件($refs)：', this.$refs);
+        console.log('props属性 childMessage：', this.$refs.demoCpn.childMessage);
+        console.log('data属性 localMessage：', this.$refs.demoCpn.localMessage);
+        this.$refs.demoCpn.showHobbies();
+      },
     },
     components: {
       // 以下语句是增强写法：'demo-component': demoComponent 或 demoComponent: demoComponent
