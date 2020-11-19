@@ -10,7 +10,9 @@
   "author": "",
   "devDependencies": {
     "css-loader": "^2.0.2",
+    "file-loader": "^2.0.0",
     "style-loader": "^2.0.0",
+    "url-loader": "^2.1.0",
     "webpack": "^3.6.0"
   }
 }

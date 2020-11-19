@@ -1,3 +1,4 @@
 body {
-    background-color: cadetblue;
+  /*background-color: cadetblue;*/
+  background: url("../img/vue-logo.png");
 }
