@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<h3>Vue语法学习：箭头函数</h3>
+
+<script>
+  // 箭头函数（两个参数）
+  const sum = (num1, num2) => {
+    return num1 + num2;
+  }
+  console.log('箭头函数（两个参数）', sum(20, 30));
+
+  // 箭头函数（单个参数），可以可以省略小括号
+  const square = num => {
+    return num * num;
+  }
+  console.log('箭头函数（单个参数）', square(30));
+
+  // 箭头函数代码块中仅一行代码
+  const double = num => num * 2;
+  console.log('箭头函数代码块中仅一行代码', double(30));
+
+  //  箭头函数中this：引用的是最近作用域中的 this
+  const object = {
+    funcA() {
+      setTimeout(function () {
+        console.log(this); // this输出打印的是 Window
+      })
+    },
+    funcB() {
+      setTimeout(() =>
+        console.log(this)); // this输出打印的是 object
+    },
+  }
+  object.funcA();
+  object.funcB();
+</script>
+
+</body>
+</html>
