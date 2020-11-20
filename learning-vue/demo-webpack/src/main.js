@@ -24,4 +24,40 @@ console.log('name', name);
 console.log('age', age);
 console.log('height', height);
 
+// 依赖CSS文件
 require('./css/normal.css');
+
+// 使用Vue进行开发
+import Vue from 'vue'
+// import App from './vue/app'
+import App from './vue/App.vue'
+
+// 将一下代码封装在./vue/app.js中
+// const App = {
+//   template: `
+//     <div>
+//       <h3>{{message}}</h3>
+//       <button @click="buttonClick">按钮</button>
+//     </div>
+//   `,
+//   data() {
+//     return {
+//       message: 'hello Vue',
+//     }
+//   },
+//   methods: {
+//     buttonClick() {
+//       console.log("点击按钮")
+//     }
+//   }
+// }
+
+new Vue({
+  el: '#app',
+  // 实际运行时，template模板会替换#app对应的dom元素
+  template: `
+    <App></App>`,
+  components: {
+    App,
+  }
+})

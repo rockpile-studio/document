@@ -26,11 +26,32 @@ module.exports = {
             options: {
               // 当加载的图片小于limit(8192B)时，会将图片转换编译成base64字符串形式，
               // 大于limit的使用file-loader加载
-              limit: 8192
-            }
+              limit: 8192,
+              // 打包时文件的命名规范：[name]表示原文件名，[hash:16]表示16位hash，[ext]是原文件的扩展名
+              name: 'img/[name].[hash:16].[ext]',
+            },
           }
         ]
+      },
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['es2015']
+          }
+        }
+      },
+      {
+        test: /\.vue$/,
+        use: ['vue-loader']
       }
     ]
-  }
+  },
+  resolve: {
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    }
+  },
 }
