@@ -1,4 +1,6 @@
 const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './src/main.js',
@@ -8,7 +10,8 @@ module.exports = {
     filename: 'bundle.js',
     // 默认情况下，webpack会将生成的路径直接返回
     // 但是整个程序是打包在dist目录下，所以publicPath添加"dist/"
-    publicPath: 'dist/',
+    // 使用HtmlWebpackPlugin插件后，不再需要配置publicPath
+    // publicPath: 'dist/',
   },
   module: {
     rules: [
@@ -50,8 +53,15 @@ module.exports = {
     ]
   },
   resolve: {
+    extensions: ['.js', '.css', '.vue'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     }
   },
+  plugins: [
+    new webpack.BannerPlugin('最终版权归Rockpile所有'),
+    new HtmlWebpackPlugin({
+      template: 'index.html'
+    }),
+  ]
 }

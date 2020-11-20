@@ -2,3 +2,4 @@
 /.gitignore
 /demo-webpack/dist/bundle.js
 /demo-webpack/node_modules/
+/demo-webpack/dist/index.html

@@ -7,7 +7,9 @@
 </template>
 
 <script>
-  import Component from './Component.vue'
+  // import Component from './Component.vue'
+  // 在webpack.config.js中配置"extensions: ['.js','.css','.vue']"后，可省略文件后缀的指定
+  import Component from './Component'
 
   export default {
     name: "App",
