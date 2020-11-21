@@ -14,6 +14,10 @@ const Home = () => import('../components/Home')
 const HomeNews = () => import('../components/HomeNews')
 const HomeMessage = () => import('../components/HomeMessage')
 const Profile = () => import('../components/Profile')
+const MartHome = () => import('../views/Home/Home')
+const MartCategory = () => import('../views/Category/Category')
+const MartShopcart = () => import('../views/Shopcart/Shopcart')
+const MartProfile = () => import('../views/Profile/Profile')
 
 // 配置路由映射：组件和路径的映射关系
 const routes = [
@@ -54,6 +58,11 @@ const routes = [
   },
   {path: '/user/:userId', meta: {title: '用户'}, component: () => import('../components/User')},
   {path: '/profile', meta: {title: '档案'}, component: Profile},
+
+  {path: '/mart/home', meta: {title: '商城首页'}, component: MartHome},
+  {path: '/mart/category', meta: {title: '商品分类'}, component: MartCategory},
+  {path: '/mart/shopcart', meta: {title: '购物车'}, component: MartShopcart},
+  {path: '/mart/profile', meta: {title: '个人中心'}, component: MartProfile},
 ]
 
 

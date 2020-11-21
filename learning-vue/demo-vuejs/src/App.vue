@@ -26,6 +26,11 @@
     <!-- # tag：指定<router-link>之后渲染成什么组件，比如渲染成button、li等-->
     <!-- # replace：指定replace属性不会留下history记录，后退键不能返回到上一个页面-->
     <router-link to="/about" tag="button" replace>关于</router-link>
+    <br>
+    <br>
+    <button @click="homeClick">Home</button>
+    <button @click="profileClick">Profile</button>
+    <button @click="aboutClick">About</button>
     <!-- keep-alive是Vue内置的组件，可以使被包含的组件保留状态，避免重新渲染。-->
     <!-- router-view也是一个组件，如果直接包在keep-alive里面，所有路径匹配到的视图组件都会被缓存-->
     <!-- keep-alive有两个重要的属性-->
@@ -37,20 +42,23 @@
       <!-- 路由切换时，切换的是<router-view>挂载的组件，其他内容不会发生改变 -->
       <router-view></router-view>
     </keep-alive>
-    <br>
-    <button @click="homeClick">Home</button>
-    <button @click="profileClick">Profile</button>
-    <button @click="aboutClick">About</button>
+
+    <main-tab-bar></main-tab-bar>
   </div>
 </template>
 
 <script>
+  import MainTabBar from "./components/TabBar/MainTabBar";
+
   export default {
     name: 'App',
     data() {
       return {
         userId: '50301',
       }
+    },
+    components: {
+      MainTabBar,
     },
     methods: {
       homeClick() {
@@ -80,6 +88,9 @@
 </script>
 
 <style>
+  /* 通过@import引用CSS资源 */
+  @import "./assets/css/base.css";
+
   .router-link-active {
     color: red;
   }
@@ -90,6 +101,6 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: left;
     color: #2c3e50;
-    margin-top: 60px;
+    margin-top: 8px;
   }
 </style>
