@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+
+<div id="app">
+  <h3>Vue语法学习：ES6特性Promise</h3>
+</div>
+
+<script>
+  // setTimeout()用来设定延迟一个时间, 时间到了执行指定的方法
+  // setTimeout()是一个典型的异步操作,，时间单位是毫秒
+  setTimeout(() => {
+    console.log('... asynchronous handler response');
+  }, 1000)
+
+  // 在ES6中，Promise是一种异步编程的解决方案
+  // 一般情况下有执行异步操作时，使用Promise对该异步操作进行封装
+  // Promise在创建的时候，需要传入参数为(resolve,reject)的函数
+  // 而参数resolve、reject本身也是函数类型
+  // 以下示例中，用setTimeout模拟网络请求的发送，通过Promise实现链式编程
+  new Promise((resolve, reject) => {
+    console.log('asynchronous handler-1 request: ',
+      new Date().getMinutes() + ':' + new Date().getSeconds());
+    const isSuccess = true;
+    if (isSuccess) {
+      setTimeout(() => {
+        resolve();
+      }, 2000);
+    } else {
+      // 失败时调用reject函数
+      reject('error object info');
+    }
+  }).then(() => {
+    console.log('asynchronous handler-1 response: ',
+      new Date().getMinutes() + ':' + new Date().getSeconds());
+    return new Promise((resolve, reject) => {
+      console.log('asynchronous handler-2 request: ',
+        new Date().getMinutes() + ':' + new Date().getSeconds());
+      setTimeout(() => {
+        // 如果resolve函数有带输入参数，name该参数会传递给该Promise对应的then()函数
+        const objectDate = {name: 'rockpile', age: 18};
+        resolve(objectDate);
+      }, 2000)
+    }).then((objectDate) => {
+      console.log('asynchronous handler-2 response: ',
+        new Date().getMinutes() + ':' + new Date().getSeconds());
+      console.log(objectDate);
+      return new Promise((resolve, reject) => {
+        console.log('asynchronous handler-3 request: ',
+          new Date().getMinutes() + ':' + new Date().getSeconds());
+        setTimeout(() => {
+          resolve();
+        }, 2000)
+      }).then(() => {
+        console.log('asynchronous handler-3 response: ',
+          new Date().getMinutes() + ':' + new Date().getSeconds());
+      })
+    })
+  }).catch((err) => {
+    // catch函数是处理对应Promise类中的reject函数
+    console.log(err);
+  })
+
+</script>
+</body>
+</html>
