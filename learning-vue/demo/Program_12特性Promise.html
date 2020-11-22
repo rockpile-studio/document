@@ -64,6 +64,53 @@
     console.log(err);
   })
 
+  // Promise的另一种写法，then方法中同时定义resolve和reject函数实现
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('asyn handler succ');
+      reject('asyn handler err');
+    })
+  }).then(data => {
+    console.log(data);
+  }, err => {
+    console.log(err);
+  })
+
+  // ### Promise类中可以省略reject函数
+  // new Promise(resolve => setTimeout(() => resolve('message: '), 1000))
+  //   .then(msg => {
+  //     console.log('链式第一层处理', msg);
+  //     return new Promise(resolve => resolve(msg + 'hello '))
+  //   }).then(msg => {
+  //   console.log('链式第二层处理', msg);
+  //   return new Promise(resolve => resolve(msg + 'world'))
+  // }).then(msg => console.log('链式第三层处理', msg))
+
+  // ### new Promise(resolve => resolve(data))简写为Promise.resolve(data)
+  new Promise(resolve => {
+    setTimeout(() => resolve('message: '), 1000)
+  }).then(msg => {
+    console.log('链式第一层处理', msg);
+    return Promise.resolve(msg + 'hello ');
+  }).then(msg => {
+    console.log('链式第二层处理', msg);
+    // return Promise.reject(msg + 'world');
+    throw msg + 'world'; /*Promise.reject也可以使用throw替换*/
+  }).then(msg => console.log('链式第三层处理', msg))
+    .catch(err => console.log('异常处理', err))
+
+  // 进一步简写，省略掉"Promise.resolve"，
+  new Promise(resolve => {
+    setTimeout(() => resolve('message: '), 1000)
+  }).then(msg => {
+    console.log('... 链式第一层处理', msg);
+    return msg + 'hello '
+  }).then(msg => {
+    console.log('... 链式第二层处理', msg);
+    return msg + 'world'
+  }).then(msg => console.log('... 链式第三层处理', msg))
+    .catch(err => console.log(err))
 </script>
+
 </body>
 </html>
