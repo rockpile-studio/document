@@ -99,7 +99,7 @@
   }).then(msg => console.log('链式第三层处理', msg))
     .catch(err => console.log('异常处理', err))
 
-  // 进一步简写，省略掉"Promise.resolve"，
+  // 进一步简写链式调用，省略掉"Promise.resolve"，
   new Promise(resolve => {
     setTimeout(() => resolve('message: '), 1000)
   }).then(msg => {
@@ -110,6 +110,25 @@
     return msg + 'world'
   }).then(msg => console.log('... 链式第三层处理', msg))
     .catch(err => console.log(err))
+
+  // Promise的All方法的使用
+  Promise.all([
+    new Promise(resolve => {
+      setTimeout(() => {
+        resolve('result1 ' + new Date().getMinutes() + ':' + new Date().getSeconds())
+      }, 2000)
+    }),
+    new Promise(resolve => {
+      setTimeout(() => {
+        resolve('result2 ' + new Date().getMinutes() + ':' + new Date().getSeconds())
+      }, 1000)
+    }),
+  ]).then(results => {
+    console.log('Promise.all ', new Date().getMinutes() + ':' + new Date().getSeconds())
+    for (let result of results) {
+      console.log(result);
+    }
+  })
 </script>
 
 </body>
