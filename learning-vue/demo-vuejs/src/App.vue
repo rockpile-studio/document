@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <div>Vuex共享属性：{{$store.state.count}}</div>
     <img src="./assets/logo.png" style="width: 100px; height: 100px">
     <!-- <router-view/> -->
     <br>
