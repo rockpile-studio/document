@@ -5,7 +5,8 @@ import App from './App'
 import router from './router'
 // 挂载Vuex的Store对象
 import store from './store/index'
-
+// 导入axios框架
+import axios from 'axios'
 
 Vue.config.productionTip = false
 
