@@ -1,5 +1,16 @@
 import axios from "axios";
 
+// 安装axios：npm install axios --save
+// axios支持多种请求方式：
+// axios(config)
+// axios.request(config)
+// axios.get(url[, config])
+// axios.delete(url[, config])
+// axios.head(url[, config])
+// axios.post(url[, data[, config]])
+// axios.put(url[, data[, config]])
+// axios.patch(url[, data[, config]])
+
 export function httpClient(config) {
   // 针对axios访问不同地址服务器的情况，较少axios全局对象的使用
   // 创建Axios实例
