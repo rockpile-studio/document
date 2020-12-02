@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0, user-scalable=no">
+  <title>主页面iframe嵌入填报页 (postMessage跨域通信)</title>
+  <style>
+    html,
+    body,
+    iframe {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0
+    }
+
+    #subpage {
+      width: 100%;
+      height: 60%;
+    }
+
+    iframe {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<iframe id="subpage" src="http://localhost:8080/home"></iframe>
+<div style="font-size: 14px; margin-left: 20px">
+  <button onclick="sendMessage(530100, '主页面发起保存')">主页面发起保存</button>
+  <h3>主页面接收iframe子页面返回的消息</h3>
+  <span id="message"></span><br/>
+</div>
+
+<script>
+  // 接收postMessage数据
+  window.addEventListener('message', function (event) {
+    console.info(event);
+    console.info(event.data);
+
+    document.getElementById('message').innerHTML = event.origin + " 返回信息:" + event.data.code
+      + "，消息:" + event.data.message + "，detail_id=" + event.data.detailId
+      + "，content=" + JSON.stringify(event.data.content);
+  }, false);
+
+  function sendMessage(code, message) {
+    const childFrame = document.getElementById("subpage");
+    const targetOrigin = 'http://localhost:8080/home?detailId=654321';
+    childFrame.contentWindow.postMessage({
+      detailId : '5030166',
+      code: code,
+      message: message,
+      content: {
+        input: '123456',
+        selector: '02',
+      },
+    }, targetOrigin)
+  };
+</script>
+</body>
+
+</html>
