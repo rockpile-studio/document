@@ -22,15 +22,8 @@ public class UserInfo {
                 ", interests=" + interests +
                 ", tags=" + tags +
                 ", createDate=" + createDate +
+                ", isDisable=" + isDisable +
                 '}';
-    }
-
-    public Boolean getDisable() {
-        return isDisable;
-    }
-
-    public void setDisable(Boolean disable) {
-        isDisable = disable;
     }
 
     public String getId() {
@@ -81,4 +74,11 @@ public class UserInfo {
         this.createDate = createDate;
     }
 
+    public Boolean getDisable() {
+        return isDisable;
+    }
+
+    public void setDisable(Boolean disable) {
+        isDisable = disable;
+    }
 }
