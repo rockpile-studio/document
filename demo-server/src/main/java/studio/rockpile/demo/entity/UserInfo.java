@@ -11,6 +11,7 @@ public class UserInfo {
     private List<String> interests;
     private Map<String, String> tags;
     private Date createDate;
+    private Boolean isDisable;
 
     @Override
     public String toString() {
@@ -22,6 +23,14 @@ public class UserInfo {
                 ", tags=" + tags +
                 ", createDate=" + createDate +
                 '}';
+    }
+
+    public Boolean getDisable() {
+        return isDisable;
+    }
+
+    public void setDisable(Boolean disable) {
+        isDisable = disable;
     }
 
     public String getId() {
