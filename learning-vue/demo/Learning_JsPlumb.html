@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    #diagramContainer {
+      padding: 20px;
+      width: 80%;
+      height: 400px;
+      border: 1px solid gray;
+      /* 网格对齐实际上是设置了grid属性，使移动只能按照固定的尺寸移动 */
+      background-image: url(http://p3alsaatj.bkt.clouddn.com/20180227163310_1bVYeW_grid.jpeg);
+      background-repeat: repeat;
+    }
+
+    .item1 {
+      float: left;
+      height: 40px;
+      width: 100px;
+      border: 1px solid blue;
+    }
+
+    .item {
+      position: absolute;
+      height: 40px;
+      width: 100px;
+      border: 1px solid blue;
+    }
+  </style>
+</head>
+<body>
+<h3>jsPlumb学习：链接两个节点</h3>
+<div id="item_left_1" class="item1"></div>
+<div id="item_right_1" class="item1" style="margin-left:60px;"></div>
+<br><br><br><br>
+
+<h3>可拖动的节点</h3>
+<div id="item_left_2" class="item"></div>
+<div id="item_right_2" class="item" style="left:150px;"></div>
+<br><br>
+
+<h3>设置connect默认配置，定制连线样式&箭头</h3>
+<div id="item_left_3" class="item"></div>
+<div id="item_center_3" class="item" style="left:200px;"></div>
+<div id="item_right_3" class="item" style="left:400px;"></div>
+<br><br>
+
+<h3>拖动端点，创建链接</h3>
+<div id="item_left_4" class="item"></div>
+<div id="item_right_4" class="item" style="left:200px;"></div>
+<div id="item_next_4" class="item" style="left:400px;"></div>
+
+<script src="../js/jsplumb.js"></script>
+
+<script>
+  const jsPlumb = window.jsPlumb;
+  // global jsPlumb
+  // jsPlumb.connect(config) return connection
+  // config参数说明：
+  // source: 连线源的标识，可以是id, element, 或者Endpoint
+  // target:  连线目标的标识，可以是id, element, 或者Endpoint
+  // endpoint: 端点形状 Dot点 Rectangle方块
+  // connector: 连接样式 Bezier贝塞尔曲线(默认) Flowchart具有90度转折点的流程线 StateMachine状态机 Straight直线
+  jsPlumb.ready(function () {
+    jsPlumb.setContainer('diagramContainer')
+
+    const commCfg = {
+      endpoint: 'Dot',
+      connector: 'StateMachine',
+      anchor: ['Left', 'Right']
+    }
+
+    jsPlumb.connect({
+      source: 'item_left_1',
+      target: 'item_right_1',
+      endpoint: 'Rectangle',
+      connector: 'Bezier'
+    })
+
+    jsPlumb.connect({
+      source: 'item_left_2',
+      target: 'item_right_2',
+      endpoint: 'Dot',
+      connector: 'Flowchart',
+      anchor: ['Left', 'Right']
+    })
+    // 使用draggable可以让节点被拖动
+    jsPlumb.draggable('item_left_2')
+    jsPlumb.draggable('item_right_2')
+
+    const conn3_1 = jsPlumb.connect({
+      source: 'item_left_3',
+      target: 'item_center_3',
+      // 设置连线的颜色、粗细
+      paintStyle: {stroke: '#FF1F2B', strokeWidth: 1.3},
+      // 设置断点的颜色、外边框的颜色和粗细
+      endpointStyle: {fill: 'lightgray', outlineStroke: 'darkgray', outlineWidth: 1},
+      // 箭头通过overlays设置的，可以设置箭头的长宽以及箭头的位置
+      // location 0.5表示箭头位于中间，1表示箭头设置在连线末端。 连线是可以添加多个箭头
+      // overlays可以理解为遮罩层。遮罩层不仅仅可以设置箭头，也可以设置其他内容
+      // overlays有五种类型
+      // - Arrow 一个可配置的箭头
+      // - Label 标签，可以在链接上显示文字信息
+      // - PlainArrow 原始类型的箭头
+      // - Diamond 菱形箭头
+      // - Custom 自定义类型
+      overlays: [
+        ["Arrow", {width: 10, length: 10, location: 1, id: "myArrow"}],
+        ["Label", {label: "标签信息", location: 0.5, id: "myLabel"}]
+      ],
+    }, commCfg)
+    const conn3_2 = jsPlumb.connect({
+      source: 'item_center_3',
+      target: 'item_right_3',
+      paintStyle: {stroke: '#3b3b3b', strokeWidth: 1.3},
+      endpointStyle: {fill: 'lightgray', outlineStroke: 'darkgray', outlineWidth: 1},
+      // Custom 自定义类型
+      overlays: [
+        ["Arrow", {width: 10, length: 10, location: 1, id: "myArrow2"}],
+      ],
+    }, commCfg)
+    jsPlumb.draggable('item_left_3')
+    jsPlumb.draggable('item_center_3')
+    jsPlumb.draggable('item_right_3')
+
+    const label = conn3_1.getOverlay("myLabel");
+    console.log("Label is currently", label.getLabel());
+    label.setLabel("新标签");
+    console.log("Label is now", label.getLabel());
+    // 隐藏&显示连线上的overlays
+    var overlay = conn3_2.getOverlay("myArrow2");
+    // now you can hide this Overlay:
+    overlay.setVisible(false);
+    overlay.hide();
+    overlay.show();
+    // 删除连线上的overlays
+    conn3_2.removeOverlay("myArrow2")
+
+    // 拖动端点，创建连接示例
+    const commCfg2 = {
+      endpoint: 'Dot',
+      isSource: true,
+      isTarget: true,
+      connector: 'StateMachine',
+      endpointStyle: {fill: 'lightgray', outlineStroke: 'darkgray', outlineWidth: 1},
+      // 端点增加样式
+      connectorStyle: {outlineStroke: '#FF1F2B', strokeWidth: 0.5},
+      connectorHoverStyle: {outlineStroke: 'blue', strokeWidth: 1},
+      // maxConnections 默认值1，也就是一个端点最多只能拉出一条连线
+      // 如果设置成5，表示最多可以有5条连接
+      // 不限制连线的数量，可以将maxConnections值设置为-1
+      maxConnections: -1,
+    }
+
+    // 整个节点作为source或者target， 并且将锚点设置成Continuous
+    // 设置后，锚点就会随着节点的位置改变而改变自己的位置
+    // jsPlumb的锚点分为四类
+    // Static 静态 固定位置的锚点
+    // Dynamic jsPlumb自动选择合适的锚点，动态锚点
+    // Perimeter 边缘锚点，会根据节点形状去改变位置
+    // Continuous 根据节点位置，自动调整位置的锚点
+    // jsPlumb.makeSource('item_left_4', {endpoint: "Dot", anchor: "Continuous"}, commCfg2)
+    jsPlumb.makeTarget('item_next_4', {endpoint: "Dot", anchor: "Continuous"}, commCfg2)
+
+    // 限制节点拖动区域，设置节点网络对齐
+    // 网格对齐实际上是设置了grid属性，使移动只能按照固定的尺寸移动
+    jsPlumb.draggable('item_left_4', {grid: [20, 20]});
+    jsPlumb.draggable('item_right_4', {grid: [20, 20]});
+    jsPlumb.draggable('item_next_4', {grid: [20, 20]});
+
+    // 初始化数据后，给节点加上endPoint,
+    // 在addEndpoint时，给该断点加上一个uuid, 然后通过connect()方法，将两个断点链接上
+    // 建议使用node-uuid给每个断点都加上唯一的uuid
+    jsPlumb.addEndpoint('item_left_4', {
+      anchors: ['Left', 'Right'],
+      uuid: 'item-left4-end-r',
+    }, commCfg2)
+    jsPlumb.addEndpoint('item_right_4', {
+      anchor: ['Left'],
+      uuid: 'item-right4-end-l',
+    }, commCfg2)
+    jsPlumb.addEndpoint('item_right_4', {
+      anchor: ['Right'],
+      uuid: 'item-right4-end-r',
+    }, commCfg2);
+
+    // 一般来说拖动端点创建连接，可以再次拖动，让原连接断开
+    // 如果不想触发这种行为，可以做如下设置
+    // jsPlumb.importDefaults({
+    //     ConnectionsDetachable: false
+    // })
+
+    // 给链接添加点击事件
+    jsPlumb.bind('click', function (conn, originalEvent) {
+      if (window.prompt('进行相关内容的弹窗操作，完成配置？(y/n)') === 'y') {
+        jsPlumb.detach(conn)
+      }
+    })
+    // 5秒后移除左边节点包括它的连线
+    console.log('5秒后移除左边节点包括它的连线')
+    // setTimeout(function () {
+    //   jsPlumb.remove('item_left_4')
+    // }, 5000)
+  })
+
+</script>
+
+
+</body>
+</html>
